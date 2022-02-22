@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/style.css">
+    <title>Tubes 1 Grafkom</title>
+</head>
+<body>
+    <script  id="vertex-shader-2d" type="notjs">
+
+        attribute vec4 a_position;
+
+        uniform vec2 u_resolution;
+      
+        void main() {
+           vec2 half_resolution = u_resolution * vec2(0.5, 0.5);
+           vec2 zeroToOne = a_position.xy / half_resolution;
+           gl_Position = vec4(zeroToOne, 0, 1);
+        }
+      </script>
+      <script  id="fragment-shader-2d" type="notjs">
+      
+        precision mediump float;
+
+        uniform vec4 u_color;
+
+        void main() {
+            gl_FragColor = u_color;
+        }
+      
+      </script>
+    <input type="radio" id="square" name="draw" value="square">
+    <label for="square">Square</label><br>
+    <input type="radio" id="rectangle" name="draw" value="rectangle">
+    <label for="square">Rectangle</label><br>
+    <input type="radio" id="change_square" name="draw" value="change_square">
+    <label for="change_square">Change Square</label><br>
+
+    <input id="color_input" type="color"><br>
+
+    <canvas id="canvas" width="600" height="600"></canvas>
+
+    <script src="./scripts/models/color.js"></script>
+    <script src="./scripts/utils/utils.js"></script>
+    <script src="./scripts/shapes/square.js"></script>
+    <script src="./scripts/master.js"></script>
+    <script src="./scripts/utils/initShader.js"></script>
+    <script src="./scripts/utils/init.js"></script>
+    <script src="./scripts/index.js"></script>
+</body>
+</html>
