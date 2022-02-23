@@ -8,11 +8,14 @@ class Master {
             x: 0,
             y: 0
         }
+        this.lines = []
         this.squares = []
         this.rectangles = []
+        this.activeLine;
         this.activeSquare;
         this.activeRect;
 
+        this.changeLine = false;
         this.changeSquare = false;
         this.currentColor = new Color(255, 0, 0);
     }
@@ -23,6 +26,12 @@ class Master {
 
     reRender() {
         this.reset();
+
+        this.lines.forEach((line) => {
+            line.prepare(this);
+            line.draw(this);
+        })
+
         this.squares.forEach((square) => {
             square.prepare(this);
             square.draw(this);

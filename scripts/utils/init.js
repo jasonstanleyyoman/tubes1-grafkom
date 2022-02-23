@@ -68,8 +68,12 @@ const initEvent = (master) => {
                     master.activeRect = newRect;
                 } else if (r.id === "square") {
                     const newSquare = new Square(master.prevClick.x, master.prevClick.y, master.prevClick.x, master.prevClick.y, master.currentColor);
-                    master.squares.push(newSquare)
-                    master.activeSquare = newSquare
+                    master.squares.push(newSquare);
+                    master.activeSquare = newSquare;
+                } else if (r.id === "line") {
+                    const newLine = new Line(master.prevClick.x, master.prevClick.y, master.prevClick.x, master.prevClick.y, master.currentColor);
+                    master.lines.push(newLine);
+                    master.activeLine = newLine;
                 } else if (r.id === "change_square") {
                     let available = false;
                     let xChange;
