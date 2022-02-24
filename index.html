@@ -8,12 +8,143 @@
     <title>Tubes 1 Grafkom</title>
 </head>
 <body>
+    <h1 class="title">Tubes 1 Grafkom</h1>
+    <div class="content">
+        <div class="drawing-space">
+            <h2 class="drawing-space-title">Drawing Space</h2>
+            <div>
+
+                <canvas id="canvas" width="600" height="600"></canvas>
+            </div>
+        </div>
+        
+        <div class="tools-and-help">
+            <div class="tools">
+                <h2 class="tools-title">Tools</h2>
+                <div class="menu">
+                        <div class="menu-title">Shape</div>
+                        :
+                        <div class="menu-item">
+                            <div>
+                                <input type="radio" id="line" name="draw" value="line">
+                            Line
+                        </div>
+                        <div>
+                            <input type="radio" id="square" name="draw" value="square">
+                            Square
+                        </div>
+                        <div>
+                            <input type="radio" id="rectangle" name="draw" value="rectangle">
+                            Rectangle
+                        </div>
+                        <div>
+                            <input type="radio" id="polygon" name="draw" value="polygon">
+                            Polygon
+                        </div>
+                        <div>
+                            <input type="checkbox" id="make_poly" name="polyAct">
+                            Make Poly
+                        </div>
+                    </div>
+                </div>
+                <div class="menu">
+                    <div class="menu-title">Change</div>
+                    :
+                    <div class="menu-item">
+                        <div>
+                            <input type="radio" id="change_line" name="draw" value="change_line">
+                            Change Line
+                        </div>
+                        <div>
+                            <input type="radio" id="change_square" name="draw" value="change_square">
+                            Change Square
+                        </div>
+                        <div>
+                            <input type="radio" id="change_color_polygon" name="draw" value="change_color_polygon">
+                            Change Poly Color
+                        </div>
+                    </div>
+                </div>
+                <div class="menu">
+                    <div class="menu-item">
+                        <div class="color-select">
+                            Color : 
+                            <input id="color_input" type="color" value="#ff0000">
+                        </div>
+                        <button id="import_btn">Import</button>
+                        <button id="export_btn">Export</button>
+                        <button onclick="location.reload();">Clear Drawing Space</button>
+                    </div>
+                </div>
+            </div>
+            <div class="help">
+                <h2 class="help-title">Help</h2>
+                <div class="help-content">
+                    <div class="help-item">
+                        <h4>Memilih warna</h4>
+                        <ul>
+                            <li>Pilih pada box input Color</li>
+                            <li>Pilih warna sesuai keinginan</li>
+                        </ul>
+                    </div>
+                    <div class="help-item">
+                        <h4>Buat Garis / Persegi / Persegi Panjang</h4>
+                        <ul>
+                            <li>Pilih radio button Shape "Line" untuk garis, "Square" untuk persegi atau "Rectangle" untuk persegi panjang</li>
+                            <li>Arahkan kursor ke drawing space</li>
+                            <li>Klik lalu drag hingga shape terbentuk sesuai keinginan</li>
+                        </ul>
+                    </div>
+                    <div class="help-item">
+                        <h4>Buat Polygon</h4>
+                        <ul>
+                            <li>Untuk membuat polygon baru pastikan checxbox "Make Poly" pada posisi unchecklist</li>
+                            <li>Pilih radio button Shape "Polygon" dan checklist pada checxbox "Make Poly"</li>
+                            <li>Arahkan kursor ke drawing space</li>
+                            <li>Klik sebanyak 2 kali untuk menentukan letak 2 titik awal</li>
+                            <li>Untuk titik ke-3 dan selanjutnya klik lalu drag hingga shape terbentuk sesuai keinginan</li>
+                            <li>*Catatan: polygon yang terbentuk menggunakan 'TRIANGLE_FAN' seingga setiap segitiga yang terbentuk akan mengacu pada titik awal dan titik sebelumnya</li>
+                        </ul>
+                    </div>
+                    <div class="help-item">
+                        <h4>Ubah Garis / Persegi</h4>
+                        <ul>
+                            <li>Pilih radio button change "Change Line" untuk garis atau "Change Square" untuk persegi</li>
+                            <li>Arahkan kursor ke drawing space</li>
+                            <li>Klik pada titik ujung garis lalu drag untuk merubah shape sesuai keinginan</li>
+                        </ul>
+                    </div>
+                    <div class="help-item">
+                        <h4>Ubah Warna Polygon</h4>
+                        <ul>
+                            <li>Pilih radio button change "Change Poly Color"</li>
+                            <li>Pilih warna sesuai keinginan</li>
+                            <li>Klik pada polygon yang ingin diubah warnanya</li>
+                        </ul>
+                    </div>
+                    <div class="help-item">
+                        <h4>Membuka Pekerjaan yang Disimpan</h4>
+                        <ul>
+                            <li>Klik button "Import"</li>
+                            <li>Cari file berformat "...." hasil export sebelumnya lalu klik "Select"</li>
+                        </ul>
+                    </div>
+                    <div class="help-item">
+                        <h4>Menyimpan Hasil Pekerjaan</h4>
+                        <ul>
+                            <li>Klik button "Export"</li>
+                            <li>Pilih lokasi penyimpanan lalu klik "Save"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script -->
     <script  id="vertex-shader-2d" type="notjs">
-
         attribute vec4 a_position;
-
         uniform vec2 u_resolution;
-
         void main() {
             vec2 half_resolution = u_resolution * vec2(0.5, 0.5);
             vec2 zeroToOne = a_position.xy / half_resolution;
@@ -21,39 +152,12 @@
         }
     </script>
     <script  id="fragment-shader-2d" type="notjs">
-
         precision mediump float;
-
         uniform vec4 u_color;
-
         void main() {
             gl_FragColor = u_color;
         }
-
     </script>
-    <input type="radio" id="square" name="draw" value="square">
-    <label for="square">Square</label><br>
-    <input type="radio" id="rectangle" name="draw" value="rectangle">
-    <label for="square">Rectangle</label><br>
-    <input type="radio" id="line" name="draw" value="line">
-    <label for="line">Line</label><br>
-    <div style="display: flex;">
-        <input type="radio" id="polygon" name="draw" value="polygon">
-        <label for="polygon">Polygon</label><br>
-        <input type="checkbox" id="make_poly" name="polyAct">
-        <label for="make_poly">Make Poly</label><br>
-    </div>
-    <input type="radio" id="change_square" name="draw" value="change_square">
-    <label for="change_square">Change Square</label><br>
-    <input type="radio" id="change_line" name="draw" value="change_line">
-    <label for="change_line">Change Line</label><br>
-    <input type="radio" id="change_color_polygon" name="draw" value="change_color_polygon">
-    <label for="change_color_polygon">Change Polygon Color</label><br>
-
-    <input id="color_input" type="color" value="#ff0000"><br>
-
-    <canvas id="canvas" width="600" height="600"></canvas>
-
     <script src="./scripts/models/color.js"></script>
     <script src="./scripts/utils/utils.js"></script>
     <script src="./scripts/shapes/square.js"></script>
