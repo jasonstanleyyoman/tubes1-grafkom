@@ -11,9 +11,12 @@ class Master {
         this.lines = []
         this.squares = []
         this.rectangles = []
+        this.polygons = [];
         this.activeLine;
         this.activeSquare;
         this.activeRect;
+        this.activePolygon;
+        this.makePolygon = false;
 
         this.changeLine = false;
         this.changeSquare = false;
@@ -40,6 +43,11 @@ class Master {
         this.rectangles.forEach((rect) => {
             rect.prepare(this);
             rect.draw(this);
+        })
+
+        this.polygons.forEach((poly) => {
+            poly.prepare(this);
+            poly.draw(this);
         })
     }
 }

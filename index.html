@@ -13,15 +13,15 @@
         attribute vec4 a_position;
 
         uniform vec2 u_resolution;
-      
+
         void main() {
-           vec2 half_resolution = u_resolution * vec2(0.5, 0.5);
-           vec2 zeroToOne = a_position.xy / half_resolution;
-           gl_Position = vec4(zeroToOne, 0, 1);
+            vec2 half_resolution = u_resolution * vec2(0.5, 0.5);
+            vec2 zeroToOne = a_position.xy / half_resolution;
+            gl_Position = vec4(zeroToOne, 0, 1);
         }
-      </script>
-      <script  id="fragment-shader-2d" type="notjs">
-      
+    </script>
+    <script  id="fragment-shader-2d" type="notjs">
+
         precision mediump float;
 
         uniform vec4 u_color;
@@ -29,20 +29,28 @@
         void main() {
             gl_FragColor = u_color;
         }
-      
-      </script>
+
+    </script>
     <input type="radio" id="square" name="draw" value="square">
     <label for="square">Square</label><br>
     <input type="radio" id="rectangle" name="draw" value="rectangle">
     <label for="square">Rectangle</label><br>
     <input type="radio" id="line" name="draw" value="line">
     <label for="line">Line</label><br>
+    <div style="display: flex;">
+        <input type="radio" id="polygon" name="draw" value="polygon">
+        <label for="polygon">Polygon</label><br>
+        <input type="checkbox" id="make_poly" name="polyAct">
+        <label for="make_poly">Make Poly</label><br>
+    </div>
     <input type="radio" id="change_square" name="draw" value="change_square">
     <label for="change_square">Change Square</label><br>
     <input type="radio" id="change_line" name="draw" value="change_line">
     <label for="change_line">Change Line</label><br>
+    <input type="radio" id="change_color_polygon" name="draw" value="change_color_polygon">
+    <label for="change_color_polygon">Change Polygon Color</label><br>
 
-    <input id="color_input" type="color"><br>
+    <input id="color_input" type="color" value="#ff0000"><br>
 
     <canvas id="canvas" width="600" height="600"></canvas>
 
@@ -50,6 +58,7 @@
     <script src="./scripts/utils/utils.js"></script>
     <script src="./scripts/shapes/square.js"></script>
     <script src="./scripts/shapes/line.js"></script>
+    <script src="./scripts/shapes/polygon.js"></script>
     <script src="./scripts/master.js"></script>
     <script src="./scripts/utils/initShader.js"></script>
     <script src="./scripts/utils/init.js"></script>

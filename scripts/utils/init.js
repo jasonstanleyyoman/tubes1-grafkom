@@ -7,7 +7,7 @@ const init = (master) => {
 
     master.gl.clearColor(0, 0, 0, 0);
     master.gl.clear(master.gl.COLOR_BUFFER_BIT);
-   
+
     var vertexShaderSource = document.querySelector("#vertex-shader-2d").text;
     var fragmentShaderSource = document.querySelector("#fragment-shader-2d").text;
 
@@ -28,7 +28,7 @@ const init = (master) => {
     var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
     var offset = 0;        // start at the beginning of the buffer
     master.gl.vertexAttribPointer(
-      positionAttributeLocation, size, type, normalize, stride, offset);
+        positionAttributeLocation, size, type, normalize, stride, offset);
 
     const resolutionUniformLocation = master.gl.getUniformLocation(program, "u_resolution");
     master.gl.uniform2f(resolutionUniformLocation, master.gl.canvas.width, master.gl.canvas.height);
@@ -46,7 +46,6 @@ const init = (master) => {
 const initEvent = (master) => {
 
     const colorInput = document.getElementById("color_input")
-
     colorInput.addEventListener("change", (e) => {
         const value = colorInput.value;
         master.currentColor = new Color(hex2dec(value.slice(1, 3)), hex2dec(value.slice(3, 5)), hex2dec(value.slice(5, 7)));
@@ -111,6 +110,54 @@ const initEvent = (master) => {
                         master.activeSquare.y1 = yAnchor;
                         master.changeSquare = true;
                     }
+                } else if (r.id === "polygon" && master.makePoly) {
+                    master.activePolygon.addVertices(master.prevClick.x, master.prevClick.y);
+                    master.reRender();
+                } else if (r.id === "change_color_polygon") {
+                    let clickPoint = [master.prevClick.x, master.prevClick.y];
+                    let clickPointExt = [master.prevClick.x + 100, master.prevClick.y];
+                    let i = master.polygons.length - 1;
+                    let isInsidePoly = false;
+                    while (!isInsidePoly && i >= 0) {
+                        const poly = master.polygons[i];
+                        const initialPoint = [poly.vertices[0], poly.vertices[1]];
+                        const currPoint = [poly.vertices[2], poly.vertices[3]];
+
+                        let intersection = getIntersectionPoint(initialPoint, currPoint, clickPoint, clickPointExt);
+                        let poinCheckX = intersection.x === undefined ? clickPoint[0] : intersection.x;
+                        let poinCheckY = intersection.y === undefined ? clickPoint[1] : intersection.y;
+                        if (checkBetween2Point([poinCheckX, poinCheckY], initialPoint, currPoint)) {
+                            isInsidePoly = true
+                        } else {
+                            let j = 4;
+                            while (!isInsidePoly && j < poly.vertices.length) {
+                                const nextPoint = [poly.vertices[j], poly.vertices[j + 1]];
+                                
+                                let centralIntersection = getIntersectionPoint(initialPoint, nextPoint, clickPoint, clickPointExt);
+                                poinCheckX = centralIntersection.x === undefined ? clickPoint[0] : centralIntersection.x;
+                                poinCheckY = centralIntersection.y === undefined ? clickPoint[1] : centralIntersection.y;
+                                if (checkBetween2Point([poinCheckX, poinCheckY], initialPoint, nextPoint)) {
+                                    isInsidePoly = true
+                                }
+
+                                let shareIntersection = getIntersectionPoint(nextPoint, currPoint, clickPoint, clickPointExt);
+                                poinCheckX = shareIntersection.x === undefined ? clickPoint[0] : shareIntersection.x;
+                                poinCheckY = shareIntersection.y === undefined ? clickPoint[1] : shareIntersection.y;
+                                if (checkBetween2Point([poinCheckX, poinCheckY], nextPoint, currPoint)) {
+                                    isInsidePoly = true
+                                }
+
+                                currPoint = nextPoint;
+                                j += 2;
+                            }
+                        }
+                        i--;
+                    }
+                    if (isInsidePoly) {
+                        master.activePolygon = master.polygons[i + 1];
+                        master.activePolygon.color = master.currentColor;
+                        master.reRender();
+                    }
                 }
             }
         })
@@ -170,6 +217,8 @@ const initEvent = (master) => {
                         
                         master.activeSquare.x2 = newX;
                         master.activeSquare.y2 = newY;
+                    } else if (r.id === "polygon" && master.makePoly && master.activePolygon.n_poly > 2) {
+                        master.activePolygon.changeLastVertices(currentPixel.x, currentPixel.y);
                     }
                 }
             })
@@ -180,5 +229,16 @@ const initEvent = (master) => {
 
     master.canvas.addEventListener("mouseup", (e) => {
         master.mouseClicked = false
+    })
+
+    const makePoly = document.getElementById('make_poly');
+    makePoly.addEventListener('change', (e) => {
+        master.makePoly = makePoly.checked;
+        if (master.makePoly) {
+            const newPolygon = new Polygon(master.currentColor);
+            master.polygons.push(newPolygon);
+            master.activePolygon = newPolygon;
+            // master.activePolygon.changeColor(master.currentColor);
+        }
     })
 }
