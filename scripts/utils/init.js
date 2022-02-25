@@ -115,38 +115,49 @@ const initEvent = (master) => {
                     master.reRender();
                 } else if (r.id === "change_color_polygon") {
                     let clickPoint = [master.prevClick.x, master.prevClick.y];
-                    let clickPointExt = [master.prevClick.x + 100, master.prevClick.y];
+                    let clickPointExt = [master.prevClick.x + 600, master.prevClick.y];
                     let i = master.polygons.length - 1;
                     let isInsidePoly = false;
                     while (!isInsidePoly && i >= 0) {
                         const poly = master.polygons[i];
                         const initialPoint = [poly.vertices[0], poly.vertices[1]];
-                        const currPoint = [poly.vertices[2], poly.vertices[3]];
+                        let currPoint = [poly.vertices[2], poly.vertices[3]];
 
                         let intersection = getIntersectionPoint(initialPoint, currPoint, clickPoint, clickPointExt);
                         let poinCheckX = intersection.x === undefined ? clickPoint[0] : intersection.x;
                         let poinCheckY = intersection.y === undefined ? clickPoint[1] : intersection.y;
-                        if (checkBetween2Point([poinCheckX, poinCheckY], initialPoint, currPoint)) {
+                        let temp = checkBetween2Point([poinCheckX, poinCheckY], initialPoint, currPoint);
+                        if (temp && intersection.x === undefined && intersection.y === undefined) {
                             isInsidePoly = true
                         } else {
+                            let isIntersect1, isIntersect2, isIntersect3;
+                            isIntersect1 = temp && checkBetween2Point([poinCheckX, poinCheckY], clickPoint, clickPointExt);
                             let j = 4;
                             while (!isInsidePoly && j < poly.vertices.length) {
-                                const nextPoint = [poly.vertices[j], poly.vertices[j + 1]];
-                                
+                                let nextPoint = [poly.vertices[j], poly.vertices[j + 1]];
+
                                 let centralIntersection = getIntersectionPoint(initialPoint, nextPoint, clickPoint, clickPointExt);
                                 poinCheckX = centralIntersection.x === undefined ? clickPoint[0] : centralIntersection.x;
                                 poinCheckY = centralIntersection.y === undefined ? clickPoint[1] : centralIntersection.y;
-                                if (checkBetween2Point([poinCheckX, poinCheckY], initialPoint, nextPoint)) {
-                                    isInsidePoly = true
+                                temp = checkBetween2Point([poinCheckX, poinCheckY], initialPoint, nextPoint);
+                                if (temp && centralIntersection.x === undefined && centralIntersection.y === undefined) {
+                                    isInsidePoly = true;
                                 }
+                                isIntersect2 = temp && checkBetween2Point([poinCheckX, poinCheckY], clickPoint, clickPointExt);
 
                                 let shareIntersection = getIntersectionPoint(nextPoint, currPoint, clickPoint, clickPointExt);
                                 poinCheckX = shareIntersection.x === undefined ? clickPoint[0] : shareIntersection.x;
                                 poinCheckY = shareIntersection.y === undefined ? clickPoint[1] : shareIntersection.y;
-                                if (checkBetween2Point([poinCheckX, poinCheckY], nextPoint, currPoint)) {
-                                    isInsidePoly = true
+                                temp = checkBetween2Point([poinCheckX, poinCheckY], nextPoint, currPoint);
+                                if (temp && shareIntersection.x === undefined && shareIntersection.y === undefined) {
+                                    isInsidePoly = true;
                                 }
+                                isIntersect3 = temp && checkBetween2Point([poinCheckX, poinCheckY], clickPoint, clickPointExt);
 
+                                if (!isInsidePoly) {
+                                    isInsidePoly = ((isIntersect1 !== isIntersect2) !== isIntersect3) && !(isIntersect1 && isIntersect2 && isIntersect3);
+                                }
+                                isIntersect1 = isIntersect2;
                                 currPoint = nextPoint;
                                 j += 2;
                             }
