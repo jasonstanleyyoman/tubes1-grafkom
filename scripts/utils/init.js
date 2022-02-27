@@ -65,14 +65,17 @@ const initEvent = (master) => {
                     const newRect = new Square(master.prevClick.x, master.prevClick.y, master.prevClick.x, master.prevClick.y, master.currentColor);
                     master.rectangles.push(newRect);
                     master.activeRect = newRect;
+                    master.renderOrders.push("rect");
                 } else if (r.id === "square") {
                     const newSquare = new Square(master.prevClick.x, master.prevClick.y, master.prevClick.x, master.prevClick.y, master.currentColor);
                     master.squares.push(newSquare);
                     master.activeSquare = newSquare;
+                    master.renderOrders.push("square");
                 } else if (r.id === "line") {
                     const newLine = new Line(master.prevClick.x, master.prevClick.y, master.prevClick.x, master.prevClick.y, master.currentColor);
                     master.lines.push(newLine);
                     master.activeLine = newLine;
+                    master.renderOrders.push("line");
                 } else if (r.id === "change_square") {
                     let available = false;
                     let xChange;
@@ -246,7 +249,7 @@ const initEvent = (master) => {
                         master.activeSquare.x2 = newX;
                         master.activeSquare.y2 = newY;
                     } else if (r.id === "polygon" && master.makePoly && master.activePolygon.n_poly > 2) {
-                        master.activePolygon.changeLastVertices(master.activePolygon.n_poly - 1, currentPixel.x, currentPixel.y);
+                        master.activePolygon.changeVertices(master.activePolygon.n_poly - 1, currentPixel.x, currentPixel.y);
                     } else if (r.id === "change_polygon" && master.changePolygon) {
                         if (master.changePolyN !== null) {
                             master.activePolygon.changeVertices(master.changePolyN, currentPixel.x, currentPixel.y);
@@ -270,9 +273,17 @@ const initEvent = (master) => {
     makePoly.addEventListener('change', (e) => {
         master.makePoly = makePoly.checked;
         if (master.makePoly) {
+            if (master.polygons.length > 0) {
+                if (master.polygons[master.polygons.length - 1].n_poly < 3) {
+                    let idx = master.renderOrders.lastIndexOf("polygon");
+                    master.polygons.pop();
+                    master.renderOrders.splice(idx, 1);
+                } 
+            }
             const newPolygon = new Polygon(master.currentColor);
             master.polygons.push(newPolygon);
             master.activePolygon = newPolygon;
+            master.renderOrders.push("polygon");
         }
     })
 }

@@ -111,9 +111,9 @@
                         </ul>
                     </div>
                     <div class="help-item">
-                        <h4>Ubah Garis / Persegi</h4>
+                        <h4>Ubah Garis / Persegi / Polygon</h4>
                         <ul>
-                            <li>Pilih radio button change "Change Line" untuk garis atau "Change Square" untuk persegi</li>
+                            <li>Pilih radio button Change "Line" untuk garis atau "Square" untuk persegi atau "Polygon" untuk polygon</li>
                             <li>Arahkan kursor ke drawing space</li>
                             <li>Klik pada titik ujung garis lalu drag untuk merubah shape sesuai keinginan</li>
                         </ul>
@@ -170,6 +170,9 @@
     <script src="./scripts/master.js"></script>
     <script src="./scripts/utils/initShader.js"></script>
     <script src="./scripts/utils/init.js"></script>
-    <script src="./scripts/index.js"></script>
+    <script>
+        const master = new Master();
+        init(master)
+    </script>
 </body>
 </html>
