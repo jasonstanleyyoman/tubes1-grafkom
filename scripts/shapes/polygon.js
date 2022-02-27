@@ -11,9 +11,9 @@ class Polygon {
         this.n_poly += 1;
     }
 
-    changeLastVertices(x, y) {
-        this.vertices[this.n_poly * 2 - 2] = x;
-        this.vertices[this.n_poly * 2 - 1] = y;
+    changeVertices(polyN, x, y) {
+        this.vertices[polyN * 2] = x;
+        this.vertices[polyN * 2 + 1] = y;
     }
 
     changeColor(color) {

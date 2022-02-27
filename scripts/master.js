@@ -20,6 +20,8 @@ class Master {
 
         this.changeLine = false;
         this.changeSquare = false;
+        this.changePolygon = false;
+        this.changePolyN = null;
         this.currentColor = new Color(255, 0, 0);
     }
 

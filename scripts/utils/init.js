@@ -113,6 +113,23 @@ const initEvent = (master) => {
                 } else if (r.id === "polygon" && master.makePoly) {
                     master.activePolygon.addVertices(master.prevClick.x, master.prevClick.y);
                     master.reRender();
+                } else if (r.id === "change_polygon") {
+                    let getPolygon = false;
+                    let i = master.polygons.length - 1;
+                    while (!getPolygon && i >= 0) {
+                        const poly = master.polygons[i];
+                        let j = 0;
+                        while (!getPolygon && j < poly.n_poly) {
+                            if (distance(currentPixel.x, currentPixel.y, poly.vertices[j * 2], poly.vertices[j * 2 + 1]) < 5) {
+                                getPolygon = true;
+                                master.changePolygon = true;
+                                master.activePolygon = poly;
+                                master.changePolyN = j;
+                            } 
+                            j ++;
+                        }
+                        i--;
+                    }
                 } else if (r.id === "change_color_polygon") {
                     let clickPoint = [master.prevClick.x, master.prevClick.y];
                     let clickPointExt = [master.prevClick.x + 600, master.prevClick.y];
@@ -229,7 +246,11 @@ const initEvent = (master) => {
                         master.activeSquare.x2 = newX;
                         master.activeSquare.y2 = newY;
                     } else if (r.id === "polygon" && master.makePoly && master.activePolygon.n_poly > 2) {
-                        master.activePolygon.changeLastVertices(currentPixel.x, currentPixel.y);
+                        master.activePolygon.changeLastVertices(master.activePolygon.n_poly - 1, currentPixel.x, currentPixel.y);
+                    } else if (r.id === "change_polygon" && master.changePolygon) {
+                        if (master.changePolyN !== null) {
+                            master.activePolygon.changeVertices(master.changePolyN, currentPixel.x, currentPixel.y);
+                        }
                     }
                 }
             })
@@ -239,7 +260,10 @@ const initEvent = (master) => {
     })
 
     master.canvas.addEventListener("mouseup", (e) => {
-        master.mouseClicked = false
+        master.mouseClicked = false;
+        master.changeSquare = false;
+        master.changePolygon = false;
+        master.changePolyN = null;
     })
 
     const makePoly = document.getElementById('make_poly');
@@ -249,7 +273,6 @@ const initEvent = (master) => {
             const newPolygon = new Polygon(master.currentColor);
             master.polygons.push(newPolygon);
             master.activePolygon = newPolygon;
-            // master.activePolygon.changeColor(master.currentColor);
         }
     })
 }
