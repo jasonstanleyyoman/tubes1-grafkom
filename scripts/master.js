@@ -8,9 +8,10 @@ class Master {
             x: 0,
             y: 0
         }
-        this.lines = []
-        this.squares = []
-        this.rectangles = []
+        this.renderOrders = []; // "line", "square", "rect", "polygon"
+        this.lines = [];
+        this.squares = [];
+        this.rectangles = [];
         this.polygons = [];
         this.activeLine;
         this.activeSquare;
@@ -31,25 +32,26 @@ class Master {
 
     reRender() {
         this.reset();
+        let l = 0, s = 0, r = 0, p = 0;
 
-        this.lines.forEach((line) => {
-            line.prepare(this);
-            line.draw(this);
-        })
-
-        this.squares.forEach((square) => {
-            square.prepare(this);
-            square.draw(this);
-        })
-
-        this.rectangles.forEach((rect) => {
-            rect.prepare(this);
-            rect.draw(this);
-        })
-
-        this.polygons.forEach((poly) => {
-            poly.prepare(this);
-            poly.draw(this);
+        this.renderOrders.forEach((obj) => {
+            if (obj === "line") {
+                this.lines[l].prepare(this);
+                this.lines[l].draw(this);
+                l++;
+            } else if (obj === "square") {
+                this.squares[s].prepare(this);
+                this.squares[s].draw(this);
+                s++;
+            } else if (obj === "rect") {
+                this.rectangles[r].prepare(this);
+                this.rectangles[r].draw(this);
+                r++;
+            } else if (obj === "polygon") {
+                this.polygons[p].prepare(this);
+                this.polygons[p].draw(this);
+                p++;
+            }
         })
     }
 }
