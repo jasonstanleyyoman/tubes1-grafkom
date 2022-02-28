@@ -355,11 +355,11 @@ const initEvent = (master) => {
 
     const importModel = document.getElementById("import");
     importModel.addEventListener("change", (e) => {
-        const file = e.target.file;
+        const file = e.target.files[0];
         var reader = new FileReader()
         reader.addEventListener('load', function (e) {
-          let data = e.target.result
-          data = JSON.parse(data)
+          let data = e.target.result;
+          data = JSON.parse(data);
 
           master.renderOrders = data.renderOrders;
           master.lines = data.lines;
@@ -369,5 +369,6 @@ const initEvent = (master) => {
 
           master.reRender();
         })
+        reader.readAsText(file);
     })
 }
