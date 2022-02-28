@@ -75,9 +75,10 @@
                             Color : 
                             <input id="color_input" type="color" value="#ff0000">
                         </div>
-                        <button id="export">Export</button>
-                        <input  class="form-control form-control-sm" type="file" id="import" accept=".json,application/json"/>
-                        <button onclick="location.reload();">Clear Drawing Space</button>
+                        <button id="import_btn">Import</button>
+                        <button id="export_btn">Export</button>
+                        <input type="file" id="import" accept=".json,application/json" style="display: none"/>
+                        <button onclick="master.clearShapes()">Clear Drawing Space</button>
                     </div>
                 </div>
             </div>

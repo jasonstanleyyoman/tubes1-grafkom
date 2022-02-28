@@ -335,7 +335,7 @@ const initEvent = (master) => {
         }
     })
 
-    const saveModel = document.getElementById("export");
+    const saveModel = document.getElementById("export_btn");
     saveModel.addEventListener("click", (e) => {
         const data = {
             renderOrders: master.renderOrders,
@@ -358,17 +358,26 @@ const initEvent = (master) => {
         const file = e.target.files[0];
         var reader = new FileReader()
         reader.addEventListener('load', function (e) {
-          let data = e.target.result;
-          data = JSON.parse(data);
+            let data = e.target.result;
+            data = JSON.parse(data);
 
-          master.renderOrders = data.renderOrders;
-          master.lines = data.lines;
-          master.squares = data.squares;
-          master.rectangles = data.rectangles;
-          master.polygons = data.polygons;
+            master.renderOrders = data.renderOrders;
+            master.lines = data.lines;
+            master.squares = data.squares;
+            master.rectangles = data.rectangles;
+            master.polygons = data.polygons;
 
-          master.reRender();
+            master.reRender();
         })
         reader.readAsText(file);
+    })
+
+    const btnImport = document.getElementById("import_btn");
+    btnImport.addEventListener("click", (e) => {
+        if (window.FileList && window.File && window.FileReader) {
+            importModel.click();
+        } else {
+            alert("file upload not supported by your browser!");
+        }
     })
 }

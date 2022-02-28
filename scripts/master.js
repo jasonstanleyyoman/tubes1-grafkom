@@ -33,7 +33,7 @@ class Master {
     reRender() {
         this.reset();
         let l = 0, s = 0, r = 0, p = 0;
-
+        
         this.renderOrders.forEach((obj) => {
             if (obj === "line") {
                 this.lines[l].prepare(this);
@@ -53,5 +53,16 @@ class Master {
                 p++;
             }
         })
+    }
+
+    clearShapes() {
+        this.renderOrders = [];
+        this.lines = [];
+        this.squares = [];
+        this.rectangles = [];
+        this.polygons = [];
+
+        this.reset();
+        this.reRender();
     }
 }
