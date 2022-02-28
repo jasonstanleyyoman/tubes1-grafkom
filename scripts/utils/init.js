@@ -77,7 +77,42 @@ const initEvent = (master) => {
                     master.activeLine = newLine;
                     master.renderOrders.push("line");
                 } else if (r.id === "change_line") {
-                    master.changeLine = true;
+                    let available = false;
+                    let xChange;
+                    let yChange;
+                    let xAnchor;
+                    let yAnchor;
+                    for (let i = 0; i < master.lines.length; i++) {
+                        const curLine = master.lines[i];
+                        if (Math.abs(curLine.x1- currentPixel.x) < Math.abs(curLine.x2 - currentPixel.x)) {
+                            xChange = curLine.x1;
+                            xAnchor = curLine.x2;
+                        } else {
+                            xChange = curLine.x2;
+                            xAnchor = curLine.x1;
+                        }
+                        if (Math.abs(curLine.y1 - currentPixel.y) < Math.abs(curLine.y2 - currentPixel.y)) {
+                            yChange = curLine.y1
+                            yAnchor = curLine.y2
+                        } else {
+                            yChange = curLine.y2
+                            yAnchor = curLine.y1
+                        }
+
+                        if (distance(xChange, yChange, currentPixel.x, currentPixel.y) < 5) {
+                            master.activeLine = master.lines[i]
+                            available = true
+                            break
+                        }
+                    }
+
+                    if (available) {
+                        master.activeLine.x2 = xChange;
+                        master.activeLine.x1 = xAnchor;
+                        master.activeLine.y2 = xChange;
+                        master.activeLine.y1 = yAnchor;
+                        master.changeLine = true;
+                    }
                 } else if (r.id === "change_square") {
                     let available = false;
                     let xChange;
@@ -235,23 +270,9 @@ const initEvent = (master) => {
                     } else if (r.id === "change_line" && master.changeLine) {
                         let newX = currentPixel.x;
                         let newY = currentPixel.y;
-                        const deltaX = Math.abs(master.activeLine.x1 - currentPixel.x);
-                        const deltaY = Math.abs(master.activeLine.y1 - currentPixel.y);
+                        const deltaX = Math.abs(master.activeLine.x1 - currentPixel.x)
+                        const deltaY = Math.abs(master.activeLine.y1 - currentPixel.y)
 
-                        if (deltaX < deltaY) {
-                            if (master.activeLine.y1 < currentPixel.y) {
-                                newY = master.activeLine.y1 + deltaX;
-                            } else {
-                                newY = master.activeLine.y1 - deltaX;
-                            }
-                        } else {
-                            if (master.activeLine.x1 < currentPixel.x) {
-                                newX = master.activeLine.x1 + deltaY;
-                            } else {
-                                newX =  master.activeLine.x1 - deltaY;
-                            }
-                        }
-                        
                         master.activeLine.x2 = newX;
                         master.activeLine.y2 = newY;
                     } else if (r.id === "change_square" && master.changeSquare) {
@@ -269,7 +290,7 @@ const initEvent = (master) => {
                             if (master.activeSquare.x1 < currentPixel.x) {
                                 newX = master.activeSquare.x1 + deltaY;
                             } else {
-                                newX =  master.activeSquare.x1 - deltaY;
+                                newX = master.activeSquare.x1 - deltaY;
                             }
                         }
                         
