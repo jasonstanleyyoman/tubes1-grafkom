@@ -3,7 +3,8 @@ class Line {
     x2;
     y1;
     y2;
-    constructor(x, y, color) {
+    
+    constructor(x1, y1, x2, y2, color) {
         this.x1 = x1;
         this.x2 = x2;
         this.y1 = y1;
@@ -14,12 +15,9 @@ class Line {
     prepare(master) {
         const positions = [
             this.x1, this.y1,
-            this.x1, this.y2,
-            this.x2, this.y1,
-            this.x1, this.y2,
-            this.x2, this.y1,
             this.x2, this.y2
         ]
+
         master.gl.bufferData(master.gl.ARRAY_BUFFER, new Float32Array(positions), master.gl.STATIC_DRAW);
 
         this.color.prepare(master);

@@ -73,6 +73,8 @@ const initEvent = (master) => {
                     const newLine = new Line(master.prevClick.x, master.prevClick.y, master.prevClick.x, master.prevClick.y, master.currentColor);
                     master.lines.push(newLine);
                     master.activeLine = newLine;
+                } else if (r.id === "change_line") {
+                    master.changeLine = true;
                 } else if (r.id === "change_square") {
                     let available = false;
                     let xChange;
@@ -203,6 +205,9 @@ const initEvent = (master) => {
                     if (r.id === "rectangle") {
                         master.activeRect.x2 = currentPixel.x;
                         master.activeRect.y2 = currentPixel.y;
+                    } else if (r.id === "line") {
+                        master.activeLine.x2 = currentPixel.x;
+                        master.activeLine.y2 = currentPixel.y;
                     } else if (r.id === "square") {
                         let newX = currentPixel.x;
                         let newY = currentPixel.y;
@@ -224,6 +229,28 @@ const initEvent = (master) => {
                         
                         master.activeSquare.x2 = newX;
                         master.activeSquare.y2 = newY;
+                    } else if (r.id === "change_line" && master.changeLine) {
+                        let newX = currentPixel.x;
+                        let newY = currentPixel.y;
+                        const deltaX = Math.abs(master.activeLine.x1 - currentPixel.x);
+                        const deltaY = Math.abs(master.activeLine.y1 - currentPixel.y);
+
+                        if (deltaX < deltaY) {
+                            if (master.activeLine.y1 < currentPixel.y) {
+                                newY = master.activeLine.y1 + deltaX;
+                            } else {
+                                newY = master.activeLine.y1 - deltaX;
+                            }
+                        } else {
+                            if (master.activeLine.x1 < currentPixel.x) {
+                                newX = master.activeLine.x1 + deltaY;
+                            } else {
+                                newX =  master.activeLine.x1 - deltaY;
+                            }
+                        }
+                        
+                        master.activeLine.x2 = newX;
+                        master.activeLine.y2 = newY;
                     } else if (r.id === "change_square" && master.changeSquare) {
                         let newX = currentPixel.x;
                         let newY = currentPixel.y;
