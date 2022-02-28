@@ -334,4 +334,40 @@ const initEvent = (master) => {
             master.renderOrders.push("polygon");
         }
     })
+
+    const saveModel = document.getElementById("export");
+    saveModel.addEventListener("click", (e) => {
+        const data = {
+            renderOrders: master.renderOrders,
+            lines: master.lines,
+            squares: master.squares,
+            rectangles: master.rectangles,
+            polygons: master.polygons
+        };
+        let content = JSON.stringify(data);
+        const a = document.createElement("a");
+        const blob = new Blob([content], { type: "json" });
+        a.href = URL.createObjectURL(blob);
+        a.download = "models.json";
+        a.click();
+        URL.revokeObjectURL(a.href);
+    })
+
+    const importModel = document.getElementById("import");
+    importModel.addEventListener("change", (e) => {
+        const file = e.target.file;
+        var reader = new FileReader()
+        reader.addEventListener('load', function (e) {
+          let data = e.target.result
+          data = JSON.parse(data)
+
+          master.renderOrders = data.renderOrders;
+          master.lines = data.lines;
+          master.squares = data.squares;
+          master.rectangles = data.rectangles;
+          master.polygons = data.polygons;
+
+          master.reRender();
+        })
+    })
 }
