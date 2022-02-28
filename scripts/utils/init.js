@@ -355,17 +355,43 @@ const initEvent = (master) => {
 
     const importModel = document.getElementById("import");
     importModel.addEventListener("change", (e) => {
+        
         const file = e.target.files[0];
         var reader = new FileReader()
         reader.addEventListener('load', function (e) {
-            let data = e.target.result;
-            data = JSON.parse(data);
+            let data;
+            try{
+                data = JSON.parse(event.target.result);
+            } catch (err) {
+                alert(`invalid json file data!\n${err}`);
+            }
 
+            if (data.renderOrders.length == 0) {
+                alert("No shape detected");
+                return
+            }
+            master.clearShapes()
             master.renderOrders = data.renderOrders;
-            master.lines = data.lines;
-            master.squares = data.squares;
-            master.rectangles = data.rectangles;
-            master.polygons = data.polygons;
+
+            for (let line of data.lines) {
+                master.lines.push(new Line(line.x1, line.y1, line.x2, line.y2, new Color(line.color.r, line.color.g, line.color.b)));
+            };
+
+            for (let square of data.squares) {
+                master.squares.push(new Square(square.x1, square.y1, square.x2, square.y2, new Color(square.color.r, square.color.g, square.color.b)));
+            };
+            
+            for (let rectangle of data.rectangles) {
+                master.rectangles.push(new Square(rectangle.x1, rectangle.y1, rectangle.x2, rectangle.y2, new Color(rectangle.color.r, rectangle.color.g, rectangle.color.b)));
+            };
+
+            for (let polygon of data.polygons) {
+                const temp = new Polygon(new Color(polygon.color.r, polygon.color.g, polygon.color.b));
+                for (let i = 0; i < polygon.n_poly; i++) {
+                    temp.addVertices(polygon.vertices[i * 2], polygon.vertices[i * 2 + 1]);
+                }
+                master.polygons.push(temp);
+            };
 
             master.reRender();
         })
